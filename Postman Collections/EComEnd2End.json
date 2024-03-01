@@ -1,0 +1,488 @@
+{
+	"info": {
+		"_postman_id": "2ef80397-b9e2-4ab9-b217-91bf119b348f",
+		"name": "EComE2E",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "674ee156-aef5-42b2-b519-4306799e61c5",
+						"exec": [
+							"const jsonData= pm.response.json();",
+							"pm.collectionVariables.set('tokenVal',jsonData.token);",
+							"pm.collectionVariables.set('userIdVal',jsonData.userId);",
+							"",
+							"pm.test('Validate if response code is 200', function() {",
+							"    pm.response.to.have.status(200)",
+							"});",
+							"",
+							"pm.test('Validate success message', function() {",
+							"    pm.expect(jsonData.message).to.be.eql(\"Login Successfully\")",
+							"});",
+							"",
+							"pm.test(\"Validate 'Successfully' keyword in response\", function() {",
+							"    pm.expect(jsonData.message).to.include('Successfully')",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "7a6aedb9-7feb-4793-83b7-adcaec687006",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userEmail\": \"{{userEmailVal}}\",\n    \"userPassword\": \"{{userPasswordVal}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/ecom/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "CreateProduct",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3569388b-62bd-4342-95ee-8a1492d6f03d",
+						"exec": [
+							"const responseJson= pm.response.json();",
+							"pm.collectionVariables.set('productIdVal',responseJson.productId);",
+							"",
+							"pm.test('Validate if response code is 201', function() {",
+							"    pm.response.to.have.status(201)",
+							"});",
+							"",
+							"pm.test('Validate success message', function() {",
+							"    pm.expect(responseJson.message).to.be.eql(\"Product Added Successfully\")",
+							"});",
+							"",
+							"pm.test(\"Validate 'Successfully' keyword in response\", function() {",
+							"    pm.expect(responseJson.message).to.include('Successfully')",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "4db9a9b6-c150-42fb-acc9-6bc023ed9c78",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{tokenVal}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "productName",
+							"value": "{{productNameVal}}",
+							"type": "text"
+						},
+						{
+							"key": "productAddedBy",
+							"value": "{{userIdVal}}",
+							"type": "text"
+						},
+						{
+							"key": "productCategory",
+							"value": "{{productCategoryVal}}",
+							"type": "text"
+						},
+						{
+							"key": "productSubCategory",
+							"value": "{{productSubCategoryVal}}",
+							"type": "text"
+						},
+						{
+							"key": "productPrice",
+							"value": "{{productPriceVal}}",
+							"type": "text"
+						},
+						{
+							"key": "productDescription",
+							"value": "{{productDescriptionVal}}",
+							"type": "text"
+						},
+						{
+							"key": "productFor",
+							"value": "{{productForVal}}",
+							"type": "text"
+						},
+						{
+							"key": "productImage",
+							"type": "file",
+							"fileNotInWorkingDirectoryWarning": "This file isn't in your working directory. Teammates you share this request with won't be able to use this file. To make collaboration easier you can setup your working directory in Settings.",
+							"src": "/Users/rahul/Postman/Files/AudiR8.jpeg"
+						}
+					]
+				},
+				"url": "{{base_url}}/api/ecom/product/add-product"
+			},
+			"response": []
+		},
+		{
+			"name": "AddToCart",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8b6e31c1-2138-4e7d-af42-3622c2cad858",
+						"exec": [
+							"const jsonData= pm.response.json();",
+							"",
+							"pm.test('Validate if response code is 200', function() {",
+							"    pm.response.to.have.status(200)",
+							"});",
+							"",
+							"pm.test('Validate  success message', function() {",
+							"    pm.expect(jsonData.message).to.be.eql(\"Product Added To Cart\")",
+							"});",
+							"",
+							"pm.test(\"Validate if 'Added' keyword is present in response\", function() {",
+							"    pm.expect(jsonData.message).to.include(\"Added\")",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "714b7211-3e72-4a2d-99db-01ae65b0d0c8",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{tokenVal}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"_id\": \"{{userIdVal}}\",\n    \"product\": {\n        \"_id\": \"{{productIdVal}}\",\n        \"productName\": \"{{productNameVal}}\",\n        \"productCategory\": \"{{productCategoryVal}}\",\n        \"productSubCategory\": \"{{productSubCategoryVal}}\",\n        \"productPrice\": {{productPriceVal}},\n        \"productDescription\": \"{{productDescriptionVal}}\",\n        \"productImage\": \"https://rahulshettyacademy.com/api/ecom/uploads/productImage_1650649434146.jpeg\",\n        \"productRating\": \"4\",\n        \"productTotalOrders\": \"1\",\n        \"productStatus\": true,\n        \"productFor\": \"{{productForVal}}\",\n        \"productAddedBy\": \"{{userEmailVal}}\",\n        \"__v\": 0\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://rahulshettyacademy.com/api/ecom/user/add-to-cart"
+			},
+			"response": []
+		},
+		{
+			"name": "PlaceOrder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "87e1fd7f-79de-4403-b886-f44e63dd0cc9",
+						"exec": [
+							"const jsonData= pm.response.json();",
+							"console.log(jsonData.orders[0]);",
+							"pm.collectionVariables.set('orderIdVal',jsonData.orders[0]);",
+							"",
+							"pm.test('Validate if response code is 201', function() {",
+							"    pm.response.to.have.status(201)",
+							"});",
+							"",
+							"pm.test('Validate success message', function() {",
+							"    pm.expect(jsonData.message).to.be.eql(\"Order Placed Successfully\")",
+							"});",
+							"",
+							"pm.test(\"Validate 'Successfully' keyword in response\", function() {",
+							"    pm.expect(jsonData.message).to.include('Successfully')",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "d2104f07-e5a8-418f-b49c-a9472d1b2944",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{tokenVal}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"orders\": [\n        {\n            \"country\": \"{{countryVal}}\",\n            \"productOrderedId\": \"{{productIdVal}}\"\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/ecom/order/create-order"
+			},
+			"response": []
+		},
+		{
+			"name": "ViewOrder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "841354da-e27a-4d0f-8550-1f48f478086f",
+						"exec": [
+							"const jsonData= pm.response.json();",
+							"",
+							"pm.test('Validate if response code is 200', function() {",
+							"    pm.response.to.have.status(200)",
+							"});",
+							"",
+							"pm.test('Validate success message', function() {",
+							"    pm.expect(jsonData.message).to.be.eql(\"Orders fetched for customer Successfully\")",
+							"});",
+							"",
+							"pm.test(\"Validate 'Successfully' keyword in response\", function() {",
+							"    pm.expect(jsonData.message).to.include('Successfully')",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "3a8a97a7-6c7e-4d42-85f2-d10beebd4098",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{tokenVal}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/ecom/order/get-orders-details?id={{orderIdVal}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"ecom",
+						"order",
+						"get-orders-details"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{orderIdVal}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteOrder",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "050861ee-7ce4-490b-87ac-36b9e3f36aee",
+						"exec": [
+							"const jsonData= pm.response.json();",
+							"",
+							"pm.test('Validate if response code is 200', function() {",
+							"    pm.response.to.have.status(200)",
+							"});",
+							"",
+							"pm.test('Validate success message', function() {",
+							"    pm.expect(jsonData.message).to.be.eql(\"Orders Deleted Successfully\")",
+							"});",
+							"",
+							"pm.test(\"Validate 'Successfully' keyword in response\", function() {",
+							"    pm.expect(jsonData.message).to.include('Successfully')",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "accac988-7cf1-46dd-82da-63a81983c482",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{tokenVal}}",
+						"type": "text"
+					}
+				],
+				"url": "{{base_url}}/api/ecom/order/delete-order/{{orderIdVal}}"
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteProduct",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "bb6fbc33-d7ba-4f98-ac79-0e303c17bf38",
+						"exec": [
+							"const jsonData= pm.response.json();",
+							"",
+							"pm.test('Validate if response code is 200', function() {",
+							"    pm.response.to.have.status(200)",
+							"});",
+							"",
+							"pm.test('Validate success message', function() {",
+							"    pm.expect(jsonData.message).to.be.eql(\"Product Deleted Successfully\")",
+							"});",
+							"",
+							"pm.test(\"Validate 'Successfully' keyword in response\", function() {",
+							"    pm.expect(jsonData.message).to.include('Successfully')",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "87b67a89-e0b4-46f4-ad91-2678678023b8",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{tokenVal}}",
+						"type": "text"
+					}
+				],
+				"url": "{{base_url}}/api/ecom/product/delete-product/{{productIdVal}}"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "1d849402-4882-4c7c-82ba-9d124bc48c49",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "169d1d45-2d8c-4bf8-8f90-254833051238",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "tokenVal",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "userIdVal",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "productIdVal",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "orderIdVal",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "productNameVal",
+			"value": "AudiR8",
+			"type": "string"
+		},
+		{
+			"key": "countryVal",
+			"value": "India",
+			"type": "string"
+		},
+		{
+			"key": "productCategoryVal",
+			"value": "Cars",
+			"type": "string"
+		},
+		{
+			"key": "productSubCategoryVal",
+			"value": "SportsCar",
+			"type": "string"
+		},
+		{
+			"key": "productPriceVal",
+			"value": "209700",
+			"type": "string"
+		},
+		{
+			"key": "productDescriptionVal",
+			"value": "Audi R8 Sports Car",
+			"type": "string"
+		},
+		{
+			"key": "productForVal",
+			"value": "Men",
+			"type": "string"
+		},
+		{
+			"key": "userEmailVal",
+			"value": "rahuldhawan89@gmail.com",
+			"type": "string"
+		},
+		{
+			"key": "userPasswordVal",
+			"value": "Rahprrs1@",
+			"type": "string"
+		}
+	]
+}
