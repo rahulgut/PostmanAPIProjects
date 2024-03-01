@@ -1,0 +1,49 @@
+{
+	"info": {
+		"_postman_id": "0a322a5b-3ec5-4bb7-bc24-fd07393e44a9",
+		"name": "GraphQL_RS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "QueryGQL",
+			"id": "2ece505e-0a7d-4cb0-b251-2b037624be2a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query ($characterId: Int!, $locationId: Int!, $episodeId: Int!) {\n  character(characterId: $characterId) {\n    name\n    status\n    species\n    type\n  }\n  location(locationId: $locationId) {\n    name\n    type\n    dimension\n  }\n  episode(episodeId: $episodeId) {\n    name\n    air_date\n  }\n}",
+						"variables": "{\n  \"characterId\": 1611,\n  \"locationId\": 2035,\n  \"episodeId\": 1545\n}"
+					}
+				},
+				"url": "https://rahulshettyacademy.com/gq/graphql"
+			},
+			"response": []
+		},
+		{
+			"name": "MutationGQL",
+			"id": "3345fe17-659b-4c4c-87d6-eadf541e9446",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation($locationName: String!, $characterName: String!, $episodeName: String!) {\n  createCharacter(character: {name: $characterName, type: \"Superhero\", status: \"Hanging\", species: \"Spider\", gender: \"male\", image: \"png\", originId: 21, locationId: 59}) {\n    id\n  }\n  createLocation(location: {name: $locationName, type: \"Planet\", dimension: \"Huge\"}) {\n    id\n  }\n  createEpisode(episode: {name: $episodeName, air_date: \"20230916\", episode: \"S01E01\"}) {\n    id\n  }\n  deleteLocations(locationIds: [2035]) {\n    locationsDeleted\n  }\n  deleteCharacters(characterIds: [1613]) {\n    charactersDeleted\n  }\n  deleteEpisodes(episodeIds: [1547]) {\n    episodesDeleted\n  }\n}",
+						"variables": "{\n  \"locationName\": \"India\",\n  \"characterName\": \"ChapriSpider\",\n  \"episodeName\": \"Jaale wala Aadmi\"\n}"
+					}
+				},
+				"url": "https://rahulshettyacademy.com/gq/graphql"
+			},
+			"response": []
+		}
+	]
+}
